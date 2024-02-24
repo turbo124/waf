@@ -31,14 +31,15 @@ class Ruleset
 
             foreach($result as $ruleset)
             {
-                if($ruleset['phase'] == $this->ruleset_name) {
-                    $cf_ruleset = $ruleset;
-                    break;
-                }
+                if($ruleset['phase'] != $this->ruleset_name) 
+                    continue;
                 
+                
+                $cf_ruleset = $ruleset;
+
             }
             
-            $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$ruleset['id']}";
+            $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$cf_ruleset['id']}";
 
             $response = $this->waf->listPaginator($cloudflare_endpoint);
             
