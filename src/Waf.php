@@ -3,6 +3,7 @@
 namespace Turbo124\Waf;
 
 use Turbo124\Waf\Http\Client;
+use Turbo124\Waf\Ruleset\Ruleset;
 
 class Waf
 {
@@ -21,6 +22,8 @@ class Waf
 
     public Client $client;
 
+    public Ruleset $ruleset;
+
     public function __construct(public string $x_auth_key, public string $x_auth_email, public string $zone_id)
     {
         $this->init();
@@ -30,7 +33,8 @@ class Waf
     private function init(): self
     {
         $this->client = new Client($this);
-
+        $this->ruleset = new Ruleset($this);
+        
         return $this;
     }
 

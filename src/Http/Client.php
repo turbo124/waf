@@ -10,7 +10,7 @@ use GuzzleHttp\Exception\RequestException;
 class Client
 {
 
-    protected Client $client;
+    protected \GuzzleHttp\Client $transport;
 
     protected ResponseInterface $response;
 
@@ -18,7 +18,7 @@ class Client
 
     public function __construct(public Waf $waf)
     {
-       $this->client = new \GuzzleHttp\Client($this->getHeaders());
+       $this->transport = new \GuzzleHttp\Client($this->getHeaders());
     }
 
     /**
@@ -35,7 +35,7 @@ class Client
 
         try {
 
-            $this->response = $this->client->request($method, $url, $payload);
+            $this->response = $this->transport->request($method, $url, $payload);
 
         } catch (RequestException $e) {
             
@@ -54,39 +54,81 @@ class Client
      */
     private function getHeaders(): array
     {
-        return ['headers' => [
-                        'X-Auth-Key' => $this->waf->x_auth_key,
-                        'X-Auth-Email' => $this->waf->x_auth_email,
-                        'Content-Type' => 'application/json',
-                    ]
-                ];
+        return 
+            [
+            'headers' => [
+                'X-Auth-Key' => $this->waf->x_auth_key,
+                'X-Auth-Email' => $this->waf->x_auth_email,
+                'Content-Type' => 'application/json',
+                ]
+            ];
     }
-
+    
+    /**
+     * successful http response
+     *
+     * @return bool
+     */
     public function successful(): bool
     {
         return $this->response->getStatusCode() >= 200 && $this->response->getStatusCode() <= 300; 
     }
-
+    
+    /**
+     * failed http response
+     *
+     * @return bool
+     */
     public function failed(): bool
     {
         return !$this->successful();
     }
+    
+    /**
+     * json response body
+     *
+     * @return string
+     */
+    public function body(): string
+    {
+        return (string)$this->response->getBody();
+    }
 
+    /**
+     * iterable response body
+     *
+     * @return iterable
+     */
     public function json(): iterable
     {
         return json_decode((string)$this->response->getBody(), true);
     }
-    
+        
+    /**
+     * Exception message
+     *
+     * @return string
+     */
     public function error(): string
     {
         return $this->exception->getMessage();
     }
-
+    
+    /**
+     * Full exception
+     *
+     * @return Exception
+     */
     public function exception(): \Exception
     {
         return $this->exception;
     }
-
+    
+    /**
+     * object response body
+     *
+     * @return mixed
+     */
     public function object(): mixed
     {
         return json_decode((string)$this->response->getBody());
