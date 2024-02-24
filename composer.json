@@ -1,0 +1,26 @@
+{
+    "name": "turbo124/waf",
+    "description": "Firewall package",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^7.5",
+        "nesbot/carbon": "2.x-dev"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.5",
+        "phpunit/phpunit": "^10.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Turbo124\\Waf\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "David Bomba",
+            "email": "turbo124@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
