@@ -14,11 +14,11 @@ class Client
 
     protected ResponseInterface $response;
 
-    protected Exception $exception;
+    protected \Exception $exception;
 
-    public function __construct(Waf $waf)
+    public function __construct(public Waf $waf)
     {
-       $this->client = new \GuzzleHttp\Client($this->waf->getHeaders());
+       $this->client = new \GuzzleHttp\Client($this->getHeaders());
     }
 
     /**
@@ -127,3 +127,4 @@ class Client
 // } catch (RequestException $e) {
 //     // info($e->getMessage());
 // }
+}
