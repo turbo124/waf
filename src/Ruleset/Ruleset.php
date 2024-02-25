@@ -10,51 +10,8 @@ class Ruleset
     /** @var string $ruleset_name */
     private string $ruleset_name = 'http_request_firewall_custom';
 
-    /** @var string $ban_ip_expression */
-    private string $ban_ip_expression = '(ip.src eq :ip)';
-
-    /** @var string $ban_country_expression */
-    private string $ban_country_expression = '(ip.geoip.country eq ":iso_3166_2")';
-
     public function __construct(public Waf $waf)
     {
-    }
-
-    /**
-     * Returns the custom firewall ruleset
-     *
-     * @return array
-     */
-    public function getRuleset(): array
-    {
-        $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets";
-
-        $response = $this->waf->client->listPaginator($cloudflare_endpoint);
-    
-        if($response->successful()) {
-            
-            $result = $response->json()['result'];
-
-            foreach($result as $ruleset)
-            {
-                if($ruleset['phase'] != $this->ruleset_name) 
-                    continue;
-                
-                
-                $cf_ruleset = $ruleset;
-
-            }
-            
-            $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$cf_ruleset['id']}";
-
-            $response = $this->waf->client->listPaginator($cloudflare_endpoint);
-            
-            return $response->json()['result'];
-            
-        }
-
-        throw new \Exception("Could not get rules " . $response->error());
-
     }
 
     /**
@@ -231,5 +188,32 @@ class Ruleset
         }
 
         return $rules;
+    }
+
+    /**
+     * Returns the custom firewall ruleset
+     *
+     * @return array
+     */
+    public function getRuleset(): array
+    {
+        $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets";
+
+        $response = $this->waf->client->listPaginator($cloudflare_endpoint);
+    
+        if($response->successful()) {
+            
+            $ruleset = collect($response->json()['result'])->where('phase', $this->ruleset_name)->first();
+
+            $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$ruleset['id']}";
+
+            $response = $this->waf->client->listPaginator($cloudflare_endpoint);
+            
+            return $response->json()['result'];
+            
+        }
+
+        throw new \Exception("Could not get rules " . $response->error());
+
     }
 }
