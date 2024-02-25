@@ -29,7 +29,7 @@ class Ruleset
     {
         $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets";
 
-        $response = $this->waf->listPaginator($cloudflare_endpoint);
+        $response = $this->waf->client->listPaginator($cloudflare_endpoint);
     
         if($response->successful()) {
             
@@ -47,7 +47,7 @@ class Ruleset
             
             $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$cf_ruleset['id']}";
 
-            $response = $this->waf->listPaginator($cloudflare_endpoint);
+            $response = $this->waf->client->listPaginator($cloudflare_endpoint);
             
             return $response->json()['result'];
             
@@ -206,5 +206,30 @@ class Ruleset
 
     }
 
+    /**
+     * Get the rules in the WAF
+     *
+     * @return array
+     */
+    public function getRules(): array
+    {
+        $rules = [
+            'block' => [],
+            'managed_challenge' => [],
+        ];
 
+        $ruleset = $this->getRuleset();
+
+        if(isset($ruleset['rules'])) {
+            
+            $rules = collect($ruleset['rules'])->map(function ($rule){
+                return [
+                    $rule['action'] => explode("or",$rule['expression']),
+                ];
+            })->toArray();
+            
+        }
+
+        return $rules;
+    }
 }

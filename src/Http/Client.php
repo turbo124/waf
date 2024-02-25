@@ -134,6 +134,26 @@ class Client
         return json_decode((string)$this->response->getBody());
     }
     
+
+
+    /**
+     * Returns a list response for pagination
+     *
+     * @param  string $url
+     * @param  int $page
+     * @param  int $per_page
+     *
+     * @return self
+     */
+    public function listPaginator($url, $page = 1, $per_page = 50): self
+    {
+
+        $this->request($url, 'GET', ['page' => $page, 'per_page' => $per_page]);
+
+        return $this;
+
+    }
+
     // /**
     //  * sendPromise
     //  *

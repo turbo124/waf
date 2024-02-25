@@ -44,7 +44,7 @@ final class RulesetTest extends TestCase
         $waf = new Waf($api_key, $email, $zone);
 
         $cloudflare_endpoint = "{$waf->url}zones/{$waf->zone_id}/rulesets";
-        $response = $waf->listPaginator($cloudflare_endpoint);
+        $response = $waf->client->listPaginator($cloudflare_endpoint);
 
         $this->assertTrue($response->successful());
 
