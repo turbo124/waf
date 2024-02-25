@@ -10,6 +10,12 @@ class Ruleset
     /** @var string $ruleset_name */
     private string $ruleset_name = 'http_request_firewall_custom';
 
+    /** @var string $ban_ip_expression */
+    private string $ban_ip_expression = '(ip.src eq :ip)';
+
+    /** @var string $ban_country_expression */
+    private string $ban_country_expression = '(ip.geoip.country eq ":iso_3166_2")';
+
     public function __construct(public Waf $waf)
     {
     }
@@ -105,7 +111,7 @@ class Ruleset
             return true;
         }
 
-        throw new \Exception("Could not get rules " . $response->body());
+        throw new \Exception("Could not get rules " . $response->error());
 
     }
     
@@ -134,7 +140,7 @@ class Ruleset
      * 
      * @return string
      */
-    public function removeExpression($rule, $expression)
+    public function removeExpression(array $rule, string $expression): string 
     {
         
         return collect(explode("or", $rule['expression']))->filter(function ($current) use ($expression) {
@@ -142,8 +148,17 @@ class Ruleset
         })->implode("or");
 
     }
-    
-     public function deleteRule($ruleset, $rule) {
+         
+     /**
+      * Delete Rule
+      *
+      * @param  array $ruleset
+      * @param  array $rule
+
+      * @return bool
+      */
+     public function deleteRule(array $ruleset, array $rule): bool 
+     {
 
         $ruleset_id = $ruleset['id'];
         $rule_id = $rule['id'];
@@ -173,7 +188,7 @@ class Ruleset
     public function addRuleParent(array $ruleset, string $expression, string $action)
     {
 
-        $cloudflare_endpoint = "{$this->url}zones/{$this->getZone()}/rulesets/{$ruleset['id']}/rules";
+        $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$ruleset['id']}/rules";
 
         $rule = [
             'action' => $action,
@@ -181,15 +196,13 @@ class Ruleset
             'description' => "Added by botlicker on " . \Carbon\Carbon::now()->toDateTimeString()
         ];
 
-        $response =
-        
         $response = $this->waf->client->request($cloudflare_endpoint, "POST", $rule);
 
         if($response->successful()) {
             return true;
         }
 
-        throw new \Exception("Could not add rule {$action} => " . $response->body());
+        throw new \Exception("Could not add rule {$action} => " . $response->error());
 
     }
 

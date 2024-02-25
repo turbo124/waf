@@ -28,7 +28,7 @@ class Client
      * @param  string $method
      * @param  array $payload
      * 
-     * @return ResponseInterface
+     * @return self
      */
     public function request(string $url, string $method, array $payload = []): self
     {
@@ -117,7 +117,7 @@ class Client
     /**
      * Full exception
      *
-     * @return Exception
+     * @return \Exception
      */
     public function exception(): \Exception
     {

@@ -11,15 +11,6 @@ class Waf
     /** @var string $url */
     public string $url = 'https://api.cloudflare.com/client/v4/';
 
-    /** @var string $ban_ip_expression */
-    private string $ban_ip_expression = '(ip.src eq :ip)';
-
-    /** @var string $ban_country_expression */
-    private string $ban_country_expression = '(ip.geoip.country eq ":iso_3166_2")';
-
-    /** @var string $ruleset_name */
-    private string $ruleset_name = 'http_request_firewall_custom';
-
     public Client $client;
 
     public Ruleset $ruleset;
