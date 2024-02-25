@@ -9,7 +9,7 @@ final class WafTest extends TestCase
 {
     public function testInitWafClass(): void
     {
-        $waf = new Waf("x","y","z");
+        $waf = new Waf("x","y","z","a");
 
         $this->assertInstanceOf(Waf::class, $waf);
     }

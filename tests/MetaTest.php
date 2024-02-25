@@ -9,9 +9,10 @@ use Turbo124\Waf\Ruleset\Ruleset;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Turbo124\Waf\Meta\Meta;
 
-#[CoversClass(Ruleset::class)]
-final class RulesetTest extends TestCase
+#[CoversClass(Meta::class)]
+final class MetaTest extends TestCase
 {
     protected Logger $log;
 
@@ -24,19 +25,7 @@ final class RulesetTest extends TestCase
         $dotenv->load();
     }
 
-    public function testHttpClient()
-    {        
-        $zone = $_ENV["CLOUDFLARE_ZONE_ID"];
-        $email = $_ENV["CLOUDFLARE_EMAIL"];
-        $api_key = $_ENV["CLOUDFLARE_API_KEY"];
-        $account_id = $_ENV["CLOUDFLARE_ACCOUNT_ID"];
-
-        $waf = new Waf($api_key, $email, $zone, $account_id);
-
-        $this->assertInstanceOf(Waf::class, $waf);
-    }
-
-    public function testRulesetListPaginator()
+    public function testIpCheck()
     {
         $zone = $_ENV["CLOUDFLARE_ZONE_ID"];
         $email = $_ENV["CLOUDFLARE_EMAIL"];
@@ -45,16 +34,27 @@ final class RulesetTest extends TestCase
 
         $waf = new Waf($api_key, $email, $zone, $account_id);
 
-        $cloudflare_endpoint = "{$waf->url}zones/{$waf->zone_id}/rulesets";
-        $response = $waf->client->listPaginator($cloudflare_endpoint);
+        $response = $waf->meta->getIpInfo('210.140.43.55');
 
         $this->assertTrue($response->successful());
 
-        $this->log->warning($response->body());
+        if($response->json()['result']['risk_types'] ?? false)
+            $this->log->warning($response->json()['result']['risk_types']);
+        else
+            $this->log->warning($response->body());
+
+
+$this->log->warning($response->body());
+
+$this->log->warning(print_r($response->json(),true));
+        
+$this->log->warning(json_encode($waf->meta->parseIpInfo($response->json())));
+
     }
 
-    public function testGetRuleset()
-    {  
+    public function testDomainCheck()
+    {
+
         $zone = $_ENV["CLOUDFLARE_ZONE_ID"];
         $email = $_ENV["CLOUDFLARE_EMAIL"];
         $api_key = $_ENV["CLOUDFLARE_API_KEY"];
@@ -62,12 +62,15 @@ final class RulesetTest extends TestCase
 
         $waf = new Waf($api_key, $email, $zone, $account_id);
 
-        $ruleset = $waf->ruleset->getRuleset();
+        $response = $waf->meta->getDomainInfo('puabook.com');
 
-        $this->log->warning(json_encode($ruleset));
+        $this->assertTrue($response->successful());
 
-        $this->assertIsArray($ruleset);
+$this->log->warning($response->body());
+
+$this->log->warning(print_r($response->json(), true));
+
+
+        $this->log->warning(json_encode($waf->meta->parseDomainInfo($response->json())));
     }
-
-    //actions - block , managed_challenge
 }

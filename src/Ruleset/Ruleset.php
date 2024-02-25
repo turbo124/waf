@@ -41,6 +41,34 @@ class Ruleset
         return $this->addRuleParent($ruleset, $expression, $action);
     }
     
+    /**
+     * Removes a rule from the Firewall
+     *
+     * @param  string $expression
+     * @param  string $action
+     * 
+     * @return bool
+     */
+    public function removeRule($expression, $action): bool
+    {
+
+        $ruleset = $this->getRuleset();
+        
+        $rule = false;
+
+       if(isset($ruleset['rules']))
+        {
+            $rule = collect($ruleset['rules'])->first(function ($rules) use ($action) {
+                return $rules['action'] == $action;
+            });
+        }
+
+        if($rule) {
+            return $this->updateRuleExpression($ruleset, $this->removeExpression($rule, $expression), $rule);
+        }
+
+        return true;
+    }
 
 
     /**
@@ -197,13 +225,17 @@ class Ruleset
      */
     public function getRuleset(): array
     {
+
         $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets";
 
         $response = $this->waf->client->listPaginator($cloudflare_endpoint);
     
         if($response->successful()) {
-            
+
             $ruleset = collect($response->json()['result'])->where('phase', $this->ruleset_name)->first();
+
+            if(!$ruleset)
+                return [];
 
             $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$ruleset['id']}";
 
