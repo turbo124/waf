@@ -44,11 +44,11 @@ final class MetaTest extends TestCase
             $this->log->warning($response->body());
 
 
-$this->log->warning($response->body());
+// $this->log->warning($response->body());
 
-$this->log->warning(print_r($response->json(),true));
+// $this->log->warning(print_r($response->json(),true));
         
-$this->log->warning(json_encode($waf->meta->parseIpInfo($response->json())));
+// $this->log->warning(json_encode($waf->meta->parseIpInfo($response->json())));
 
     }
 
@@ -66,11 +66,11 @@ $this->log->warning(json_encode($waf->meta->parseIpInfo($response->json())));
 
         $this->assertTrue($response->successful());
 
-$this->log->warning($response->body());
+// $this->log->warning($response->body());
 
-$this->log->warning(print_r($response->json(), true));
+// $this->log->warning(print_r($response->json(), true));
 
 
-        $this->log->warning(json_encode($waf->meta->parseDomainInfo($response->json())));
+//         $this->log->warning(json_encode($waf->meta->parseDomainInfo($response->json())));
     }
 }

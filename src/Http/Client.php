@@ -36,7 +36,7 @@ class Client
         try {
 
             $this->response = $this->transport->request($method, $url, $payload);
-
+echo (string)$this->response->getBody();
         } catch (RequestException $e) {
             
             $this->exception = $e;
