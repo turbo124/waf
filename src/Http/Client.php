@@ -3,22 +3,21 @@
 namespace Turbo124\Waf\Http;
 
 use Turbo124\Waf\Waf;
-use GuzzleHttp\Promise;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\RequestException;
 
 class Client
 {
-
     protected \GuzzleHttp\Client $transport;
 
     protected ResponseInterface $response;
 
-    protected \Exception $exception;
+    protected ?\Exception $exception;
 
     public function __construct(public Waf $waf)
     {
-       $this->transport = new \GuzzleHttp\Client();
+        $this->transport = new \GuzzleHttp\Client();
+        $this->exception = null;
     }
 
     /**
@@ -27,22 +26,22 @@ class Client
      * @param  string $url
      * @param  string $method
      * @param  array $payload
-     * 
+     *
      * @return self
      */
     public function request(string $url, string $method, array $payload = []): self
     {
-
+        
         try {
 
             $this->response = $this->transport->request($method, $url, ['body' => json_encode($payload), 'headers' => $this->getHeaders()]);
 
         } catch (RequestException $e) {
-            
+
             $this->exception = $e;
             echo $e->getMessage();
         }
-        
+
         return $this;
 
     }
@@ -55,12 +54,12 @@ class Client
     private function getHeaders(): array
     {
         return [
-                'X-Auth-Key' => $this->waf->x_auth_key,
-                'X-Auth-Email' => $this->waf->x_auth_email,
-                'Content-Type' => 'application/json',
-                ];
+            'X-Auth-Key' => $this->waf->x_auth_key,
+            'X-Auth-Email' => $this->waf->x_auth_email,
+            'Content-Type' => 'application/json',
+        ];
     }
-    
+
     /**
      * successful http response
      *
@@ -68,9 +67,9 @@ class Client
      */
     public function successful(): bool
     {
-        return $this->response->getStatusCode() >= 200 && $this->response->getStatusCode() <= 300; 
+        return !$this->exception && $this->response->getStatusCode() >= 200 && $this->response->getStatusCode() <= 300;
     }
-    
+
     /**
      * failed http response
      *
@@ -80,7 +79,7 @@ class Client
     {
         return !$this->successful();
     }
-    
+
     /**
      * json response body
      *
@@ -100,7 +99,7 @@ class Client
     {
         return json_decode((string)$this->response->getBody(), true);
     }
-        
+
     /**
      * Exception message
      *
@@ -110,7 +109,7 @@ class Client
     {
         return $this->exception->getMessage();
     }
-    
+
     /**
      * Full exception
      *
@@ -120,7 +119,7 @@ class Client
     {
         return $this->exception;
     }
-    
+
     /**
      * object response body
      *
@@ -130,7 +129,7 @@ class Client
     {
         return json_decode((string)$this->response->getBody());
     }
-    
+
 
 
     /**
@@ -161,7 +160,7 @@ class Client
     // {
     //     $responses = Promise\Utils::unwrap($promises);
     // }
-    
+
 
     // private function getResponseStatus($response)
     // {
@@ -169,21 +168,21 @@ class Client
     // }
 
 
-// try {
-//     $batch_of = 40;
-//     $batch = array_chunk($metric_array, $batch_of);
+    // try {
+    //     $batch_of = 40;
+    //     $batch = array_chunk($metric_array, $batch_of);
 
-//     /* Concurrency ++ */
-//     foreach ($batch as $key => $value) {
-//         $data['metrics'] = $value;
+    //     /* Concurrency ++ */
+    //     foreach ($batch as $key => $value) {
+    //         $data['metrics'] = $value;
 
-//         $promises = [
-//         $key => $client->requestAsync('POST', $this->endPoint($metric_array[0]->type), ['form_params' => $data])
-//         ];
+    //         $promises = [
+    //         $key => $client->requestAsync('POST', $this->endPoint($metric_array[0]->type), ['form_params' => $data])
+    //         ];
 
-//         $this->sendPromise($promises);
-//     }
-// } catch (RequestException $e) {
-//     // info($e->getMessage());
-// }
+    //         $this->sendPromise($promises);
+    //     }
+    // } catch (RequestException $e) {
+    //     // info($e->getMessage());
+    // }
 }

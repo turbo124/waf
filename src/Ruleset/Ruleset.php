@@ -174,7 +174,7 @@ class Ruleset
     {
         
         $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$ruleset['id']}/rules";
-        // $cloudflare_endpoint = "{$this->waf->url}accounts/{$this->waf->account_id}/rulesets/{$ruleset['id']}/rules";
+
         $rule = [
             'enabled' => true,
             'action' => $action,
