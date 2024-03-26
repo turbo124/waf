@@ -176,12 +176,10 @@ class Ruleset
         $cloudflare_endpoint = "{$this->waf->url}zones/{$this->waf->zone_id}/rulesets/{$ruleset['id']}/rules";
         // $cloudflare_endpoint = "{$this->waf->url}accounts/{$this->waf->account_id}/rulesets/{$ruleset['id']}/rules";
         $rule = [
+            'enabled' => true,
             'action' => $action,
             'expression' => $expression,
             'description' => "Added by waf-sdk on " . \Carbon\Carbon::now()->toDateTimeString(),
-            'logging' => [
-                'enabled' => true
-            ]
         ];
 
         $response = $this->waf->client->request($cloudflare_endpoint, "POST", $rule);

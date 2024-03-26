@@ -41,7 +41,7 @@ final class CloudflareTest extends TestCase
         
         $this->assertInstanceOf(Waf::class, $this->waf);
         
-        $response = $this->waf->banIp('103.15.248.111');
+        $response = $this->waf->banIp('103.15.248.112');
 
         $this->assertTrue($response);
     }

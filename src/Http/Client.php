@@ -18,7 +18,7 @@ class Client
 
     public function __construct(public Waf $waf)
     {
-       $this->transport = new \GuzzleHttp\Client($this->getHeaders());
+       $this->transport = new \GuzzleHttp\Client();
     }
 
     /**
@@ -35,14 +35,14 @@ class Client
 
         try {
 
-            $this->response = $this->transport->request($method, $url, $payload);
-echo (string)$this->response->getBody();
+            $this->response = $this->transport->request($method, $url, ['body' => json_encode($payload), 'headers' => $this->getHeaders()]);
+
         } catch (RequestException $e) {
             
             $this->exception = $e;
-
+            echo $e->getMessage();
         }
-
+        
         return $this;
 
     }
@@ -54,14 +54,11 @@ echo (string)$this->response->getBody();
      */
     private function getHeaders(): array
     {
-        return 
-            [
-            'headers' => [
+        return [
                 'X-Auth-Key' => $this->waf->x_auth_key,
                 'X-Auth-Email' => $this->waf->x_auth_email,
                 'Content-Type' => 'application/json',
-                ]
-            ];
+                ];
     }
     
     /**
