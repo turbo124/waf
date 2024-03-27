@@ -36,19 +36,11 @@ final class MetaTest extends TestCase
 
         $response = $waf->meta->getIpInfo('210.140.43.55');
 
-        $this->assertTrue($response->successful());
+        $this->assertIsArray($response);
+        $this->assertEquals('210.140.43.55', $response['ip']);
 
-        if($response->json()['result']['risk_types'] ?? false)
-            $this->log->warning($response->json()['result']['risk_types']);
-        else
-            $this->log->warning($response->body());
-
-
-// $this->log->warning($response->body());
-
-// $this->log->warning(print_r($response->json(),true));
-        
-// $this->log->warning(json_encode($waf->meta->parseIpInfo($response->json())));
+        $this->log->warning(json_encode($response));
+        $this->log->warning(json_encode($response));
 
     }
 
@@ -64,13 +56,11 @@ final class MetaTest extends TestCase
 
         $response = $waf->meta->getDomainInfo('puabook.com');
 
-        $this->assertTrue($response->successful());
+        $this->log->warning(json_encode($response));
 
-// $this->log->warning($response->body());
+        $this->assertEquals('puabook.com', $response['domain']);
 
-// $this->log->warning(print_r($response->json(), true));
+        $this->assertIsArray($response);
 
-
-//         $this->log->warning(json_encode($waf->meta->parseDomainInfo($response->json())));
     }
 }

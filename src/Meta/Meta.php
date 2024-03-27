@@ -9,7 +9,7 @@ class Meta
 
     public function __construct(public Waf $waf) {}
 
-    public function parseIpInfo(array $response_json): array
+    public function parseIpInfo(iterable $response_json): array
     {
         return [
             'ip' => $response_json['result'][0]['ip'],
@@ -19,7 +19,7 @@ class Meta
         ];
     }
 
-    public function getIpInfo(string $ip)
+    public function getIpInfo(string $ip): array
     {
 
         $url = "{$this->waf->url}accounts/{$this->waf->account_id}/intel/ip?ipv4={$ip}";
@@ -27,11 +27,11 @@ class Meta
         $response = $this->waf->client->request($url, 'GET');
 
         if($response->successful())
-            return $response;
+            return $this->parseIpInfo($response->json());
 
     }
 
-    public function parseDomainInfo(array $response_json): array
+    public function parseDomainInfo(iterable $response_json): array
     {
         return [
             'domain' => $response_json['result']['domain'],
@@ -39,7 +39,7 @@ class Meta
             'risk_type_string' => collect($response_json['result']['risk_type'])->pluck('name')->implode(",") ?? [],
             'risk_type' => $response_json['result']['risk_type'] ?? [],
             'content_catgories' => $response_json['result']['content_categories'] ?? [],
-            'content_category_string' => collect($response_json['result']['content_categories'])->pluck('name')->implode(",") ?? [],
+            'content_category_string' => collect($response_json['result']['content_categories'] ?? [])->pluck('name')->implode(",") ?? [],
         ];
     }
 
@@ -50,7 +50,7 @@ class Meta
         $response = $this->waf->client->request($url, 'GET');
 
         if($response->successful()) {
-            return $response;
+            return $this->parseDomainInfo($response->json());
         }
 
     }

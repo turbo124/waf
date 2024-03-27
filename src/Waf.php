@@ -126,7 +126,7 @@ class Waf
     }
     
     /**
-     * Ban Countryby their ISO 3166 2 code representation
+     * Ban Country by their ISO 3166 2 code representation
      *
      * @param  string $iso_3166_2
      * @return bool
@@ -153,5 +153,15 @@ class Waf
 
         return $this->ruleset->removeRule($expression, 'block');
         
+    }
+
+    public function getDomainInfo(string $domain): array
+    {
+        return $this->meta->getDomainInfo($domain);
+    }
+
+    public function getIpInfo(string $ip): array
+    {
+        return $this->meta->getIpInfo($ip);
     }
 }
