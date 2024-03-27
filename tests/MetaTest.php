@@ -63,4 +63,24 @@ final class MetaTest extends TestCase
         $this->assertIsArray($response);
 
     }
+
+    public function testDomainCheckRiskTypes()
+    {
+
+        $zone = $_ENV["CLOUDFLARE_ZONE_ID"];
+        $email = $_ENV["CLOUDFLARE_EMAIL"];
+        $api_key = $_ENV["CLOUDFLARE_API_KEY"];
+        $account_id = $_ENV["CLOUDFLARE_ACCOUNT_ID"];
+
+        $waf = new Waf($api_key, $email, $zone, $account_id);
+
+        $response = $waf->meta->getDomainInfo('example.com');
+
+        $this->log->warning(json_encode($response));
+
+        $this->assertEquals('example.com', $response['domain']);
+
+        $this->assertIsArray($response);
+
+    }
 }

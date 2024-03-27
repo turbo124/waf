@@ -65,3 +65,50 @@ $waf->unchallengeIp('103.15.248.112');
 ## Bonus intelligence helpers.
 
 Cloudflare providers some nifty intelligence metrics on certain domains and IP addresses and can provide risk ratings
+
+
+### Get Domain Information
+
+```php
+$waf->getDomainInfo('example.com');
+```
+
+#### Response
+
+```php
+[
+  "domain" => "puabook.com",
+  "ip" => "51.254.35.55",
+  "risk_type_string" => "Parked & For Sale Domains,Security Risks",
+  "risk_type" => [
+    [
+      "id" => 128,
+      "super_category_id" => 32,
+      "name" => "Parked & For Sale Domains",
+    ],
+    [
+      "id" => 32,
+      "name" => "Security Risks",
+    ],
+  ],
+  "content_catgories" => [],
+  "content_category_string" => "",
+]
+```
+
+### Get IP Information
+
+```php
+$waf->meta->getIpInfo('210.140.43.55');
+```
+
+#### Response
+
+```php
+[
+  "ip" => "210.140.43.55",
+  "asn" => 4694,
+  "country" => "JP",
+  "risk_types" => [],
+]
+```

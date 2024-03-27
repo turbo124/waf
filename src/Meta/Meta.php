@@ -36,7 +36,7 @@ class Meta
         return [
             'domain' => $response_json['result']['domain'],
             'ip' => collect($response_json['result']['resolves_to_refs'])->pluck('value')->implode(",") ?? [],
-            'risk_type_string' => collect($response_json['result']['risk_type'])->pluck('name')->implode(",") ?? [],
+            'risk_type_string' => collect($response_json['result']['risk_type'] ?? [])->pluck('name')->implode(",") ?? [],
             'risk_type' => $response_json['result']['risk_type'] ?? [],
             'content_catgories' => $response_json['result']['content_categories'] ?? [],
             'content_category_string' => collect($response_json['result']['content_categories'] ?? [])->pluck('name')->implode(",") ?? [],
