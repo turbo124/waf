@@ -70,11 +70,11 @@ class Meta
 
         $dns = dns_get_record($domain);
 
-        if($dns[0]['ip'] ?? false){
-            return $domain;
-        }
-            // return $dns[0]['ip'];
+        $ip = &$dns[0]['ip'];
 
+        if($ip)
+            return $domain;
+        
         return null;
     }
 }

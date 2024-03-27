@@ -39,7 +39,7 @@ class Client
         } catch (RequestException $e) {
 
             $this->exception = $e;
-            echo $e->getMessage();
+
         }
 
         return $this;
@@ -150,39 +150,4 @@ class Client
 
     }
 
-    // /**
-    //  * sendPromise
-    //  *
-    //  * @param  mixed $promises
-    //  * @return void
-    //  */
-    // private function sendPromise($promises): void
-    // {
-    //     $responses = Promise\Utils::unwrap($promises);
-    // }
-
-
-    // private function getResponseStatus($response)
-    // {
-
-    // }
-
-
-    // try {
-    //     $batch_of = 40;
-    //     $batch = array_chunk($metric_array, $batch_of);
-
-    //     /* Concurrency ++ */
-    //     foreach ($batch as $key => $value) {
-    //         $data['metrics'] = $value;
-
-    //         $promises = [
-    //         $key => $client->requestAsync('POST', $this->endPoint($metric_array[0]->type), ['form_params' => $data])
-    //         ];
-
-    //         $this->sendPromise($promises);
-    //     }
-    // } catch (RequestException $e) {
-    //     // info($e->getMessage());
-    // }
 }
