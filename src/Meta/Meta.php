@@ -8,7 +8,13 @@ class Meta
 {
 
     public function __construct(public Waf $waf) {}
-
+    
+    /**
+     * parseIpInfo
+     *
+     * @param  mixed $response_json
+     * @return array
+     */
     public function parseIpInfo(iterable $response_json): array
     {
         return [
@@ -18,7 +24,13 @@ class Meta
             'risk_types' => $response_json['result'][0]['risk_types'] ?? []
         ];
     }
-
+    
+    /**
+     * getIpInfo
+     *
+     * @param  string $ip
+     * @return array
+     */
     public function getIpInfo(string $ip): array
     {
 
@@ -30,7 +42,13 @@ class Meta
             return $this->parseIpInfo($response->json());
 
     }
-
+    
+    /**
+     * parseDomainInfo
+     *
+     * @param  mixed $response_json
+     * @return array
+     */
     public function parseDomainInfo(iterable $response_json): array
     {
         return [
@@ -42,8 +60,14 @@ class Meta
             'content_category_string' => collect($response_json['result']['content_categories'] ?? [])->pluck('name')->implode(",") ?? [],
         ];
     }
-
-    public function getDomainInfo(string $domain)
+    
+    /**
+     * getDomainInfo
+     *
+     * @param  string $domain
+     * @return array
+     */
+    public function getDomainInfo(string $domain): array
     {
         $url = "{$this->waf->url}accounts/{$this->waf->account_id}/intel/domain?domain={$domain}";
         
