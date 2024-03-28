@@ -78,7 +78,7 @@ Cloudflare providers some nifty intelligence metrics on certain domains and IP a
 ### Get Domain Information
 
 ```php
-$waf->getDomainInfo('example.com');
+$waf->meta->getDomainInfo('example.com');
 ```
 
 #### Response
