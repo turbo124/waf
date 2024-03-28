@@ -29,7 +29,7 @@ $waf->unbanIp('103.15.248.112');
 ### Ban a ASN
 
 ```php
-$waf->banASn('10343');
+$waf->banAsn('10343');
 ```
 
 ### UnBan a ASN
