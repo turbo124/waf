@@ -14,11 +14,17 @@ $api_key = The cloudflare API key (must have permissions with write Zone Ruleset
 
 ```
 
-### Ban a IP address
-
+## Init the WAF
 ```php
 $waf = new \Turbo124\Waf\Waf($api_key, $email, $zone, $account_id);
 ```
+
+### Ban a IP address
+
+```php
+$waf->unbanIp('103.15.248.112');
+```
+
 
 ### Unban a IP Address
 
