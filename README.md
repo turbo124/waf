@@ -2,6 +2,8 @@
 
 A wrapper over the Cloudflare WAF.
 
+Stop threats at the network edge, not at your application.
+
 ## Ban IP addresses at the network edge
 
 ### Initialize the Cloudflare WAF
